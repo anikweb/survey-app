@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Question;
 use App\Models\Questionnaire;
+use App\Models\QustionnaireOrder;
 use App\Models\questionniare_option;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
@@ -13,8 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestionnaireController extends Controller
 {
-
-
     /**
      * Display a listing of the resource.
      *
@@ -23,9 +22,22 @@ class QuestionnaireController extends Controller
     public function index()
     {
         if(Auth::user()->role == 2){
-            return view('backend.pages.questionnaire.index',[
-                'questionnaires' => Questionnaire::Paginate(10),
-            ]);
+
+            if(QustionnaireOrder::find(1)->order_title == 'popular'){
+                return view('backend.pages.questionnaire.index',[
+                    'questionnaires' => Questionnaire::orderBy('total_perticipants','desc')->Paginate(10),
+                ]);
+            }elseif(QustionnaireOrder::find(1)->order_title == 'highest_scored'){
+                return view('backend.pages.questionnaire.index',[
+                    'questionnaires' => Questionnaire::orderBy('total_scored','desc')-> Paginate(10),
+                ]);
+            }
+
+
+
+
+
+
         }else{
             return abort(404);
         }
@@ -86,6 +98,8 @@ class QuestionnaireController extends Controller
             $questionnare = new Questionnaire;
             $questionnare->title = $request->title;
             $questionnare->slug = Str::slug($request->title);
+            $questionnare->total_perticipants = 0;
+            $questionnare->total_scored = 0;
             $questionnare->details = $request->details;
             $questionnare->save();
             if($request->hasFile('image')){
@@ -151,7 +165,6 @@ class QuestionnaireController extends Controller
             return abort(404);
         }
     }
-
     /**
      * Update the specified resource in storage.
      *

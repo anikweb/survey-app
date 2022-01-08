@@ -26,7 +26,7 @@ Route::get('/{slug}/global-statistics',[FrontendController::class,'globalStatist
 Route::post('/global/statistics/store',[FrontendController::class,'countryStatisticsStore'])->name('frontend.country.statistics.store');
 // global-social-media-addiction-statistics
 Route::get('/{slug}/global-and-country-statistics',[FrontendController::class,'countryStatisticsShow'])->name('frontend.country.statistics.show');
-
+Route::post('/manage/questionnaire-order',[FrontendController::class,'questionnaireOrder'])->name('questionnaire.order');
 Route::get('/dashboard', function () {
     if(Auth::user()->role == 2){
         return redirect()->route('questionnaire.index');
@@ -37,5 +37,6 @@ Route::get('/dashboard', function () {
 
 Route::resource('dashboard/questionnaire', QuestionnaireController::class)->middleware('auth');
 Route::resource('dashboard/result-and-suggestion',ResultSuggestionController::class)->middleware('auth');
+
 
 require __DIR__.'/auth.php';

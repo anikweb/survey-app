@@ -10,6 +10,7 @@ use App\Models\Questionnaire;
 use App\Models\Question;
 use App\Models\ResultSuggestion;
 use App\Models\score;
+use App\Models\QustionnaireOrder;
 use Illuminate\Http\Request;
 use Share;
 
@@ -23,9 +24,15 @@ class FrontendController extends Controller
             $cookie_duration = 43200;
             Cookie::queue($cookie_name, $cookie_value, $cookie_duration);
         }
-        return view('frontend.pages.home',[
-            'questionnaire' => Questionnaire::all(),
-        ]);
+        if(QustionnaireOrder::find(1)->order_title == 'popular'){
+            return view('frontend.pages.home',[
+                'questionnaire' => Questionnaire::orderBy('total_perticipants','desc')->get(),
+            ]);
+        }elseif(QustionnaireOrder::find(1)->order_title == 'highest_scored'){
+            return view('frontend.pages.home',[
+                'questionnaire' => Questionnaire::orderBy('total_scored','desc')->get(),
+            ]);
+        }
     }
     public function showQuestion($slug)
     {
@@ -43,8 +50,10 @@ class FrontendController extends Controller
     }
     public function storeQuestion(Request $request)
     {
+
         $request->validate([
             '*' => 'required',
+            'gender' => 'required',
         ]);
         foreach ($request->index as $key => $value) {
             if(!isset($request->question[$value])){
@@ -69,6 +78,11 @@ class FrontendController extends Controller
         $score->country_id = $request->country_id;
         $score->save();
         session()->put('score_id',$score->id);
+        if($score->save()){
+            Questionnaire::where('id',$score->questionnaire_id)->increment('total_perticipants',1);
+            Questionnaire::where('id',$score->questionnaire_id)->increment('total_scored',$score->total_score);
+        }
+
 
         if(CountryScore::where('questionnaire_id',$score->questionnaire_id)->where('country_id',$score->country_id)->exists()){
             $countryPerticipants = CountryScore::where('questionnaire_id',$score->questionnaire_id)->where('country_id',$score->country_id)
@@ -84,6 +98,7 @@ class FrontendController extends Controller
             $countryScore->total_score = $score->total_score;
             $countryScore->save();
         }
+
         return redirect()->route('frontend.question.submit',$questionnaire->slug);
     }
     public function submitQuestion($slug){
@@ -305,6 +320,17 @@ class FrontendController extends Controller
             'perticipants_other_69_plus' => score::where('questionnaire_id',$questionnaire->id)->where('age','>',68)->where('gender','other')->get(),
             'perticipants_all_69_plus' => score::where('questionnaire_id',$questionnaire->id)->where('age','>',68)->get(),
         ]);
+    }
+
+    public function questionnaireOrder(Request $request)
+    {
+        $request->validate([
+            "*" => "required",
+        ]);
+        $order = QustionnaireOrder::find(1);
+        $order->order_title =$request->order;
+        $order->save();
+        return back();
     }
 
 }

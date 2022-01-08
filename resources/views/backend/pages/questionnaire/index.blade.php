@@ -29,6 +29,32 @@
                         Questionnaires
                     </div>
                     <div class="card-body">
+                        <div>
+                            <div class="row">
+                                <div class="col-md-4 my-2">
+                                    <form  method="POST" action="{{ route('questionnaire.order') }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                                <label for="Change_Order">Change Order</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select name="order" id="Change_Order" class="form-control d-inline-block">
+                                                    <option @if(App\Models\QustionnaireOrder::find(1)->order_title == 'total_perticipants') selected @endif value="popular">Popular</option>
+                                                    <option value="highest_scored" @if(App\Models\QustionnaireOrder::find(1)->order_title == 'highest_scored') selected @endif>Highest Scored</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="submit" class="btn d-inline-block btn-primary">Apply</button>
+
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>

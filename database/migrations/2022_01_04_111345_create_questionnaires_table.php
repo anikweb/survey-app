@@ -16,8 +16,11 @@ class CreateQuestionnairesTable extends Migration
         Schema::create('questionnaires', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug');
             $table->longText('details');
             $table->string('image')->nullable();
+            $table->bigInteger('total_perticipants')->nullable();
+            $table->bigInteger('total_scored')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

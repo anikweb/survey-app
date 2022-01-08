@@ -18,7 +18,7 @@
             <h3> Global {{ $questionnaire->title }} </h3>
             <p>The calculation of the score scale is based on a 100-point-scale. The higher your score, the more likely you have a social media addiction. Please note that this test score can not be considered as a scientific diagnosis in any way.
             </p>
-            <a href="{{ route('frontend.question.show',$questionnaire->id) }}"> Click here to take the test</a>
+            <a href="{{ route('frontend.question.show',$questionnaire->slug) }}"> Click here to take the test</a>
             <hr>
         </div>
         <div class="col-md-12 my-2">
