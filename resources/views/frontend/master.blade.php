@@ -39,6 +39,9 @@
                     <li class="nav-item">
                         <a class="nav-link" style="color: #FFDEAD" href="#">Contact</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: #FFDEAD" href="{{ route('login') }}">Login</a>
+                    </li>
                     {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">Login</a>
                     </li> --}}

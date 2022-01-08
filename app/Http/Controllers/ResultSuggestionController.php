@@ -14,7 +14,9 @@ class ResultSuggestionController extends Controller
      */
     public function index()
     {
-        //
+        return view('backend.pages.result_suggestion.index',[
+            'results' => ResultSuggestion::all(),
+        ]);
     }
 
     /**
@@ -24,7 +26,7 @@ class ResultSuggestionController extends Controller
      */
     public function create()
     {
-        //
+        // return v;
     }
 
     /**
@@ -55,9 +57,13 @@ class ResultSuggestionController extends Controller
      * @param  \App\Models\ResultSuggestion  $resultSuggestion
      * @return \Illuminate\Http\Response
      */
-    public function edit(ResultSuggestion $resultSuggestion)
+    public function edit($id)
     {
-        //
+        $result = ResultSuggestion::find($id);
+        return view('backend.pages.result_suggestion.edit',[
+            'result' => $result,
+        ]);
+
     }
 
     /**
@@ -67,9 +73,17 @@ class ResultSuggestionController extends Controller
      * @param  \App\Models\ResultSuggestion  $resultSuggestion
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ResultSuggestion $resultSuggestion)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            "*" => "required",
+        ]);
+        $result = ResultSuggestion::find($request->result_id);
+        $result->result = $request->result;
+        $result->suggestion = $request->suggestion;
+        $result->save();
+        return back();
+        // return $request;
     }
 
     /**

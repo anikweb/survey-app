@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\ResultSuggestionController;
 use Illuminate\Support\Facades\Route;
 use illuminate\Support\Facades\Auth;
 
@@ -15,17 +16,16 @@ use illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/',[FrontendController::class,'index'])->name('frontend');
-Route::get('/survey/{id}',[FrontendController::class,'showQuestion'])->name('frontend.question.show');
+Route::get('/social-test/{slug}',[FrontendController::class,'showQuestion'])->name('frontend.question.show');
 Route::post('/survey/store',[FrontendController::class,'storeQuestion'])->name('frontend.question.store');
-Route::get('/survey/score/{id}',[FrontendController::class,'submitQuestion'])->name('frontend.question.submit');
-Route::get('/survey/global/statistics/{id}',[FrontendController::class,'globalStatistics'])->name('frontend.global.statistics');
+Route::get('/{slug}/results-suggestions',[FrontendController::class,'submitQuestion'])->name('frontend.question.submit');
+Route::get('/{slug}/global-statistics',[FrontendController::class,'globalStatistics'])->name('frontend.global.statistics');
 // Route::get('/survey/global/statistics/{id}',[FrontendController::class,'countryStatistics'])->name('frontend.country.statistics');
-Route::post('/survey/global/statistics/store',[FrontendController::class,'countryStatisticsStore'])->name('frontend.country.statistics.store');
-Route::get('/survey/global/country/statistics/{id}',[FrontendController::class,'countryStatisticsShow'])->name('frontend.country.statistics.show');
-// Route::get('/', function () {
-//     return view('frontend.pages.home');
-// });
+Route::post('/global/statistics/store',[FrontendController::class,'countryStatisticsStore'])->name('frontend.country.statistics.store');
+// global-social-media-addiction-statistics
+Route::get('/{slug}/global-and-country-statistics',[FrontendController::class,'countryStatisticsShow'])->name('frontend.country.statistics.show');
 
 Route::get('/dashboard', function () {
     if(Auth::user()->role == 2){
@@ -36,5 +36,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('dashboard/questionnaire', QuestionnaireController::class)->middleware('auth');
+Route::resource('dashboard/result-and-suggestion',ResultSuggestionController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';

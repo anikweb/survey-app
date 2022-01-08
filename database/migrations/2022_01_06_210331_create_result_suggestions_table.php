@@ -15,6 +15,10 @@ class CreateResultSuggestionsTable extends Migration
     {
         Schema::create('result_suggestions', function (Blueprint $table) {
             $table->id();
+            $table->string('result_group');
+            $table->string('position');
+            $table->longText('result');
+            $table->longText('suggestion');
             $table->timestamps();
         });
     }

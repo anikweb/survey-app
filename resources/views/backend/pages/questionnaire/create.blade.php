@@ -29,30 +29,44 @@
                     </div>
                     <div class="card-body">
                         @if($errors->any())
-                        <div class="alert alert-danger">
-                            You need to filup title,details,image fields.
-                        </div>
-                    @endif
+                            <div class="alert alert-danger">
+                                <span>You need to filup title,details,image fields.</span>
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                <span>You need to filup title,details,image, question and also Option1-Option3 fields.</span>
+                            </div>
+                        @endif
                         <form action="{{ route('questionnaire.store') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Title <span>*</span></label>
-                                        <input type="text" name="title" class="form-control" placeholder="Enter Title">
+                                        <input type="text" name="title" value="{{ old('title') }}" class="form-control" placeholder="Enter Title">
                                     </div>
                                     <div class="form-group">
-                                        <label>Write Details <span>*</span></label>
-                                        <textarea placeholder="Write Details" class="form-control" name="details" rows="5">Write Details</textarea>
-                                        <hr>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Image <span>*</span></label>
-                                        <input type="file" name="image">
-                                        <hr>
+                                        <label>Write Details<span>*</span></label>
+                                            <textarea placeholder="Write Details" class="form-control" name="details" rows="5">{{ old('title') }}</textarea>
                                     </div>
                                 </div>
-
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-6 my-auto">
+                                            <div class="form-group">
+                                                <label>Image <span>*</span></label>
+                                                <input type="file" name="image" onchange="document.getElementById('image_preview').src = window.URL.createObjectURL(this.files[0])">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div >
+                                                <img id="image_preview" width="200px" class="img-bordered img-fluid" src="{{ asset('backend/images/no-image.jpg') }}" alt="no image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <div class="multi-field-wrapper">
@@ -60,9 +74,10 @@
                                                 <div class="row multi-field form-group my-2">
                                                     <div class="col-md-10">
                                                         <div class="row">
+                                                            <input type="hidden" name='question_number[]' class="at_num" value="1">
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    <label>Question <span>*</span> </label>
+                                                                    <label><span class="at_nums">1</span> Question <span>*</span></label>
                                                                     <input type="text" name="question[]"  class="form-control" placeholder="Enter Question">
                                                                 </div>
                                                             </div>
@@ -74,7 +89,7 @@
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <div class="form-group">
-                                                                    <label>Point <span>*</span></label>
+                                                                    <label>Point </label>
                                                                     <input type="number" name="point1[]"  class="form-control" placeholder="Point">
                                                                 </div>
                                                             </div>
@@ -86,7 +101,7 @@
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <div class="form-group">
-                                                                    <label>Point <span>*</span></label>
+                                                                    <label>Point </label>
                                                                     <input type="number" name="point2[]"  class="form-control" placeholder="Point">
                                                                 </div>
                                                             </div>
@@ -98,31 +113,31 @@
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <div class="form-group">
-                                                                    <label>Point <span>*</span></label>
+                                                                    <label>Point </label>
                                                                     <input type="number" name="point3[]"  class="form-control" placeholder="Point">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label>Option 4 <span>*</span></label>
+                                                                    <label>Option 4</label>
                                                                     <input type="text" name="option4[]"  class="form-control" placeholder="Enter Option 4">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <div class="form-group">
-                                                                    <label>Point <span>*</span></label>
+                                                                    <label>Point</label>
                                                                     <input type="number" name="point4[]"  class="form-control" placeholder="Point">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label>Option 5 <span>*</span></label>
+                                                                    <label>Option 5 </label>
                                                                     <input type="text" name="option5[]"  class="form-control" placeholder="Enter Option 5">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <div class="form-group">
-                                                                    <label>Point <span>*</span></label>
+                                                                    <label>Point</label>
                                                                     <input type="number" name="point5[]"  class="form-control" placeholder="Point">
                                                                 </div>
                                                             </div>
@@ -166,9 +181,9 @@
         $('.multi-field-wrapper').each(function(){
         var $wrapper = $('.multi-fields', this);
         $('.add-field').click(function(){
-            $('.multi-field:first-child').clone(true).appendTo($wrapper).find('.q').val(1);
-            // $('.multi-field:first-child').clone(true).appendTo($wrapper).find('.q').val(1);
-
+            let mana = $('.multi-field', $wrapper).length;
+            $('.multi-field:last-child').clone(true).appendTo($wrapper).find('.at_num').val(mana+1);
+            $('.multi-field:last-child').find('.at_nums').html(mana+1);
         });
         $('.remove-field').click(function(){
             if($('.multi-field', $wrapper).length >1){

@@ -19,6 +19,7 @@ class CreateQuestionnairesTable extends Migration
             $table->longText('details');
             $table->string('image')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -14,7 +14,7 @@
                         <div class="card">
                             <img class="card-img-top" src="{{ asset('backend/images/questionnaire').'/'.$item->created_at->format('Y/m/d/').$item->id.'/image/'.$item->image }}" alt="{{ $item->title }}">
                             <div class="card-body">
-                                <a href="{{ route('frontend.question.show',$item->id) }}" class="h5">{{ $item->title }}</a>
+                                <a href="{{ route('frontend.question.show',$item->slug) }}" class="h5">{{ $item->title }}</a>
                                 <p class="card-text">{{ $item->details }}</p>
                             </div>
                         </div>

@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 mt-3">
-            <h3> Global {{ $questionnaire->title }}</h3>
+            <h3> Global {{ $questionnaire->title }} </h3>
             <p>The calculation of the score scale is based on a 100-point-scale. The higher your score, the more likely you have a social media addiction. Please note that this test score can not be considered as a scientific diagnosis in any way.
             </p>
             <a href="{{ route('frontend.question.show',$questionnaire->id) }}"> Click here to take the test</a>
@@ -85,8 +85,9 @@
         <div class="col-md-12 my-2">
             <div id="tabs">
                 <ul>
-                  <li><a href="#tabs-2"> Chart based on gender</a></li>
-                  <li><a href="#tabs-3">Chart based on age group</a></li>
+                    <li><a href="#tabs-2"> Chart based on gender</a></li>
+                    <li><a href="#tabs-3">Chart based on age group</a></li>
+                    <li><a href="#tabs-4">Top 10 countries</a></li>
                 </ul>
                 <div id="tabs-2">
                     <div class="row">
@@ -102,6 +103,15 @@
                         <div class="col-12 col-md-6 mx-auto">
                             <div>
                                 <canvas  id="gAge"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabs-4">
+                    <div class="row">
+                        <div class="col-12 col-md-6 mx-auto">
+                            <div>
+                                <canvas  id="topCountries"></canvas>
                             </div>
                         </div>
                     </div>
@@ -596,17 +606,15 @@
         } );
         $('.country_input').select2();
 
-
-
         const gGender_2 = document.getElementById('gGender').getContext('2d');
 
         const gGender = new Chart(gGender_2, {
             type: 'pie',
             data: {
                 labels: [
-                    'Male Avarage Score',
-                    'Female Avarage Score',
-                    'Others Avarage Score',
+                    'Male Average Score',
+                    'Female Average Score',
+                    'Others Average Score',
                 ],
                 datasets: [{
                     label: 'Country Chart',
@@ -630,22 +638,541 @@
                 }]
             }
         });
+        @if (isset($countryScore[9]->total_score))
+            @php
+                $countryScores10 = round($countryScore[9]->total_score/$countryScore[9]->total_perticipants);
+                $countryScores9 = round($countryScore[8]->total_score/$countryScore[8]->total_perticipants);
+                $countryScores8 = round($countryScore[7]->total_score/$countryScore[7]->total_perticipants);
+                $countryScores7 = round($countryScore[6]->total_score/$countryScore[6]->total_perticipants);
+                $countryScores6 = round($countryScore[5]->total_score/$countryScore[5]->total_perticipants);
+                $countryScores5 = round($countryScore[4]->total_score/$countryScore[4]->total_perticipants);
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[9]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[8]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[7]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[6]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[5]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[4]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores10 }}",
+                            "{{ $countryScores9 }}",
+                            "{{ $countryScores8 }}",
+                            "{{ $countryScores7 }}",
+                            "{{ $countryScores6 }}",
+                            "{{ $countryScores5 }}",
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                            'rgba(128, 0, 128)',
+                            'rgb(255,20,147)',
+                            'rgb(165,42,42)',
+                            'rgba(2, 87, 42,0.1)',
+                            'rgb(0, 0, 255, 0.1)',
+                            'rgba(128, 0, 128, 0.1)',
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                            'rgba(128, 0, 128,0.5)',
+                            'rgb(255,20,147,0.5)',
+                            'rgb(165,42,42,0.5)',
+                            'rgba(2, 87, 42)',
+                            'rgb(0, 0, 255)',
+                            'rgba(128, 0, 128)',
+
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[8]->total_score))
+            @php
+                $countryScores9 = round($countryScore[8]->total_score/$countryScore[8]->total_perticipants);
+                $countryScores8 = round($countryScore[7]->total_score/$countryScore[7]->total_perticipants);
+                $countryScores7 = round($countryScore[6]->total_score/$countryScore[6]->total_perticipants);
+                $countryScores6 = round($countryScore[5]->total_score/$countryScore[5]->total_perticipants);
+                $countryScores5 = round($countryScore[4]->total_score/$countryScore[4]->total_perticipants);
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[8]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[7]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[6]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[5]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[4]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores9 }}",
+                            "{{ $countryScores8 }}",
+                            "{{ $countryScores7 }}",
+                            "{{ $countryScores6 }}",
+                            "{{ $countryScores5 }}",
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                            'rgba(128, 0, 128)',
+                            'rgb(255,20,147)',
+                            'rgb(165,42,42)',
+                            'rgba(2, 87, 42,0.1)',
+                            'rgb(0, 0, 255, 0.1)',
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                            'rgba(128, 0, 128,0.5)',
+                            'rgb(255,20,147,0.5)',
+                            'rgb(165,42,42,0.5)',
+                            'rgba(2, 87, 42)',
+                            'rgb(0, 0, 255)',
+
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[7]->total_score))
+            @php
+                $countryScores8 = round($countryScore[7]->total_score/$countryScore[7]->total_perticipants);
+                $countryScores7 = round($countryScore[6]->total_score/$countryScore[6]->total_perticipants);
+                $countryScores6 = round($countryScore[5]->total_score/$countryScore[5]->total_perticipants);
+                $countryScores5 = round($countryScore[4]->total_score/$countryScore[4]->total_perticipants);
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[7]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[6]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[5]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[4]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores8 }}",
+                            "{{ $countryScores7 }}",
+                            "{{ $countryScores6 }}",
+                            "{{ $countryScores5 }}",
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                            'rgba(128, 0, 128)',
+                            'rgb(255,20,147)',
+                            'rgb(165,42,42)',
+                            'rgba(2, 87, 42,0.1)',
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                            'rgba(128, 0, 128,0.5)',
+                            'rgb(255,20,147,0.5)',
+                            'rgb(165,42,42,0.5)',
+                            'rgba(2, 87, 42)',
+
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[6]->total_score))
+            @php
+                $countryScores7 = round($countryScore[6]->total_score/$countryScore[6]->total_perticipants);
+                $countryScores6 = round($countryScore[5]->total_score/$countryScore[5]->total_perticipants);
+                $countryScores5 = round($countryScore[4]->total_score/$countryScore[4]->total_perticipants);
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[6]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[5]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[4]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores7 }}",
+                            "{{ $countryScores6 }}",
+                            "{{ $countryScores5 }}",
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                            'rgba(128, 0, 128)',
+                            'rgb(255,20,147)',
+                            'rgb(165,42,42)',
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                            'rgba(128, 0, 128,0.5)',
+                            'rgb(255,20,147,0.5)',
+                            'rgb(165,42,42,0.5)',
+
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[5]->total_score))
+            @php
+                $countryScores6 = round($countryScore[5]->total_score/$countryScore[5]->total_perticipants);
+                $countryScores5 = round($countryScore[4]->total_score/$countryScore[4]->total_perticipants);
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[5]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[4]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores6 }}",
+                            "{{ $countryScores5 }}",
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                            'rgba(128, 0, 128)',
+                            'rgb(255,20,147)',
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                            'rgba(128, 0, 128,0.5)',
+                            'rgb(255,20,147,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[4]->total_score))
+            @php
+                $countryScores5 = round($countryScore[4]->total_score/$countryScore[4]->total_perticipants);
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[4]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores5 }}",
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                            'rgba(128, 0, 128)',
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                            'rgba(128, 0, 128,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[3]->total_score))
+            @php
+                $countryScores4 = round($countryScore[3]->total_score/$countryScore[3]->total_perticipants);
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[3]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores4 }}",
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                            'rgba(255, 161, 0)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                            'rgba(255, 161, 0,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[2]->total_score))
+            @php
+                $countryScores3 = round($countryScore[2]->total_score/$countryScore[2]->total_perticipants);
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[2]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores3 }}",
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                            'rgba(2, 87, 42)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                            'rgba(2, 87, 42,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[1]->total_score))
+            @php
+                $countryScores2 = round($countryScore[1]->total_score/$countryScore[1]->total_perticipants);
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[1]->country_id)->name) }} Average Score',
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores2 }}",
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                            'rgb(0, 0, 255)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                            'rgb(0, 0, 255,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @elseif(isset($countryScore[0]->total_score))
+            @php
+                $countryScores1 = round($countryScore[0]->total_score/$countryScore[0]->total_perticipants);
+            @endphp
+
+            const topCountries_2 = document.getElementById('topCountries').getContext('2d');
+            const topCountries = new Chart(topCountries_2, {
+                type: 'pie',
+                data: {
+
+                    labels: [
+                        '{{ Str::title(App\Models\country::find($countryScore[0]->country_id)->name) }} Average Score',
+                    ],
+                    datasets: [{
+                        label: 'Average Score by age groups',
+                        data: [
+                            "{{ $countryScores1 }}",
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 0, 0)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        @endif
+
+
 
         const gAge_2 = document.getElementById('gAge').getContext('2d');
         const gAge = new Chart(gAge_2, {
             type: 'pie',
             data: {
                 labels: [
-                    '01-13 Avarage Score',
-                    '14-24 Avarage Score',
-                    '25-35 Avarage Score',
-                    '36-46 Avarage Score',
-                    '47-57 Avarage Score',
-                    '58-68 Avarage Score',
-                    '69+ Avarage Score',
+                    '01-13 Average Score',
+                    '14-24 Average Score',
+                    '25-35 Average Score',
+                    '36-46 Average Score',
+                    '47-57 Average Score',
+                    '58-68 Average Score',
+                    '69+ Average Score',
                 ],
                 datasets: [{
-                    label: 'Avarage Score by age groups',
+                    label: 'Average Score by age groups',
                     data: [
                         {{ round($perticipants_all_1_13->avg('total_score')) }},
                         {{ round($perticipants_all_14_24->avg('total_score')) }},
@@ -678,6 +1205,15 @@
                 }]
             }
         });
+
+
+
+
+
+
+
+
+
         @if (isset($Ctotal_perticipants))
             $( function() {
                 $( "#Ctabs" ).tabs();
@@ -687,9 +1223,9 @@
                 type: 'pie',
                 data: {
                     labels: [
-                        'Male Avarage Score',
-                        'Female Avarage Score',
-                        'Others Avarage Score',
+                        'Male Average Score',
+                        'Female Average Score',
+                        'Others Average Score',
                     ],
                     datasets: [{
                         label: 'Country Chart',
@@ -719,16 +1255,16 @@
                 type: 'pie',
                 data: {
                     labels: [
-                        '01-13 Avarage Score',
-                        '14-24 Avarage Score',
-                        '25-35 Avarage Score',
-                        '36-46 Avarage Score',
-                        '47-57 Avarage Score',
-                        '58-68 Avarage Score',
-                        '69+ Avarage Score'
+                        '01-13 Average Score',
+                        '14-24 Average Score',
+                        '25-35 Average Score',
+                        '36-46 Average Score',
+                        '47-57 Average Score',
+                        '58-68 Average Score',
+                        '69+ Average Score'
                     ],
                     datasets: [{
-                        label: 'Avarage Score by age groups',
+                        label: 'Average Score by age groups',
                         data: [
                             {{ round($Cperticipants_all_1_13->avg('total_score')) }},
                             {{ round($Cperticipants_all_14_24->avg('total_score')) }},
